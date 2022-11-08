@@ -2,18 +2,29 @@ import MySQLdb
 from tkinter import *
 from functools import partial
 
+import hashlib
+
+# connect to the database
 db = MySQLdb.connect(host="grover.ctuetzgk1e5k.us-east-1.rds.amazonaws.com",    # host address
 		user="admin",         # username
 		passwd="howard123",  # password
 		db="grover")        # database name
 
 cur = db.cursor()
-loginvalide = False
+loginvalid = False
 
 def validlogin(username, password):
-	print(username, password)
+	#print(username.get())
+	#print(password.get())
+	# read from a local file, this file stores legal usernames and their hashed passwords
+	# this fild may not be synchronized with database, it needs to be manually synchronized
+	u,p = username.get(), password.get()
+	s = p.encode('utf-8')
+	ep = hashlib.sha1(s).digest()	# hashed to a 20-byte string
+	print(u, ep)
 
 def showlogin():
+	# this function is used to show the login window
 	tkWindow = Tk()
 	tkWindow.geometry('400x150')
 	tkWindow.title('Login')
